@@ -24,10 +24,14 @@ client.on('data', (data) => {
   msg = data
   switch(state){
     case 1:
-      if(msg == "accept"){
+      if(msg == "accept" ){
         console.log('Connect Completed');
         process.stdout.write("Enter your username: ");
-        client.write()
+      }else if(msg == "correct user"){
+        process.stdout.write("Enter your password: ");
+        state = 2;
+      }else if(msg == "incorrect user"){
+        process.stdout.write("Enter your username again: ");
       }
     break;
   }
@@ -39,6 +43,8 @@ rl.on('line', (line) => { //line msg of command line
     case 1:
       client.write(""+line);
     break;
+    case 2:
+      client.write(""+line)
   }
 });
 
