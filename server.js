@@ -1,4 +1,5 @@
 const net = require('net');
+const { argv0 } = require('process');
 
 let memClient = new Object();
 let userPass = new Object();

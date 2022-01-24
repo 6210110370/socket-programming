@@ -60,7 +60,7 @@ client.on('data', (data) => {
         process.stdout.write("Enter more movie: ");
         state = 3
       }else if(""+msg == "use to ticket"){
-        process.stdout.write("Have someone ticket this seat")
+        process.stdout.write("Have someone ticket this seat :")
       }
     break;
 
