@@ -71,8 +71,6 @@ for(let i=0;i<3 ;i++){
   movies[tagMov[i]] = new movie(movName[i]);
 }
 
-console.log(movies["m1"].seat.seats)
-//console.log(typeof(movies["b1"]))
 console.log('Wait for client');
 
 const server = net.createServer((socket) => {
@@ -140,7 +138,10 @@ const server = net.createServer((socket) => {
           movies[memClient[String(socket.remotePort)].movN].
                             seat.
                             seats[""+buffer] = 0
+          memClient[String(socket.remotePort)].changeState(3)
           socket.write("complete")
+        }else if(st ==0){
+          socket.write("use to ticket")
         }
         
       break;

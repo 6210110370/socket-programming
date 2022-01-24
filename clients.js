@@ -57,6 +57,10 @@ client.on('data', (data) => {
         process.stdout.write("This seat is not available try again: ");
       }else if(""+msg == "complete"){
         console.log("complete ticket")
+        process.stdout.write("Enter more movie: ");
+        state = 3
+      }else if(""+msg == "use to ticket"){
+        process.stdout.write("Have someone ticket this seat")
       }
     break;
 
