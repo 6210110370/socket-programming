@@ -29,6 +29,7 @@ class member{
     this.state = 0;
     this.user = ""
     this.pass = ""
+    this.movN = ""
   }
 
   changeState(state){
@@ -50,7 +51,7 @@ class seat{
     let strs = ['a','b','c']
     this.seats = new Object()
     for(let i=0;i<10;i++)
-      for(let j=0;i<3;i++){
+      for(let j=0;j<3;j++){
         this.seats[""+strs[j]+i] = 1
       }
   }
@@ -66,10 +67,12 @@ class movie{
 let tagMov = ["m1","m2","m3"]
 let movName = ['spider man','super man','iron man']
 let movies = new Object()
-for(let mov in movName){
-  movies[tagMov[mov]] = new movie(movName[mov]);
+for(let i=0;i<3 ;i++){
+  movies[tagMov[i]] = new movie(movName[i]);
 }
 
+console.log(movies["m1"].seat.seats)
+//console.log(typeof(movies["b1"]))
 console.log('Wait for client');
 
 const server = net.createServer((socket) => {
@@ -117,6 +120,7 @@ const server = net.createServer((socket) => {
         for(let i=0;i<3;i++){
           if(tagMov[i] == ""+buffer){
             memClient[String(socket.remotePort)].changeState(4)
+            memClient[String(socket.remotePort)].movN = tagMov[i]
             socket.write("correct movname")
             checkMov = 1
           }
@@ -126,6 +130,19 @@ const server = net.createServer((socket) => {
         }
       break;
       case 4: //wait for seat
+        let checkSeat = 0
+        let st = movies[memClient[String(socket.remotePort)].movN].
+                            seat.
+                            seats[""+buffer] 
+        if(typeof( st ) == "undefined"){
+          socket.write("wrong seat")
+        }else if(st == 1){
+          movies[memClient[String(socket.remotePort)].movN].
+                            seat.
+                            seats[""+buffer] = 0
+          socket.write("complete")
+        }
+        
       break;
     }
   });

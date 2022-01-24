@@ -47,11 +47,17 @@ client.on('data', (data) => {
     case 3: //send number tag movie
       if(""+msg == "correct movname"){
         process.stdout.write("Enter seat tag: ");
+        state = 4
       }else if(""+msg == "incorrect movname"){
         process.stdout.write("Enter seat tag again: ");
       }
     break;
     case 4: //send for seat
+      if(""+msg == "wrong seat"){
+        process.stdout.write("This seat is not available try again: ");
+      }else if(""+msg == "complete"){
+        console.log("complete ticket")
+      }
     break;
 
   }
