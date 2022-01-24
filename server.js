@@ -14,6 +14,10 @@ class login{
   get getUsername(){
     return this.username
   }
+
+  get getPassword(){
+    return this.password
+  }
 }
 
 userPass[manyUser++] = new login('admin','admin')
@@ -41,6 +45,31 @@ class member{
 
 }
 
+class seat{
+  constructor(){
+    let strs = ['a','b','c']
+    this.seats = new Object()
+    for(let i=0;i<10;i++)
+      for(let j=0;i<3;i++){
+        this.seats[""+strs[j]+i] = 1
+      }
+  }
+}
+
+class movie{
+  constructor(movieName){
+    this.movieName = movieName
+    this.seat = new seat();
+  }
+}
+
+let tagMov = ["m1","m2","m3"]
+let movName = ['spider man','super man','iron man']
+let movies = new Object()
+for(let mov in movName){
+  movies[tagMov[mov]] = new movie(movName[mov]);
+}
+
 console.log('Wait for client');
 
 const server = net.createServer((socket) => {
@@ -49,25 +78,55 @@ const server = net.createServer((socket) => {
 
   socket.on('data', (buffer) => {
     switch(memClient[String(socket.remotePort)].getMemState){
-      case 0 :
+      case 0 : //idle
         if(buffer == "request"){
           memClient[String(socket.remotePort)].changeState(1)
           socket.write("accept");
         }
       break;
-      case 1:
-        console.log()
+      case 1: //wait for user
+        let check=0
         for(let i=0;i<manyUser;i++){
-          if(buffer == userPass[i].getUsername){
+          console.log(socket.remotePort+" => user : "+buffer)
+          if(""+buffer == userPass[i].getUsername){
             memClient[String(socket.remotePort)].user = userPass[i].getUsername
+            memClient[String(socket.remotePort)].pass = userPass[i].getPassword
+            console.log(socket.remotePort+" => correct user")
             socket.write("correct user");
             memClient[String(socket.remotePort)].changeState(2)
+            check = 1
             break;
           }
         }
-        socket.write("incorrect user");
+        if(!check){
+          console.log(socket.remotePort+" => incorrect user")
+          socket.write("incorrect user");
+        }
       break;
-      
+      case 2: //wait password
+        if(memClient[String(socket.remotePort)].pass == ""+buffer){
+          memClient[String(socket.remotePort)].changeState(3)
+          console.log(socket.remotePort+" => login complete")
+          socket.write("correct pass")
+        }else{
+          socket.write("incorrect pass")
+        }
+      break;
+      case 3: //wait number tag movie
+        let checkMov = 0
+        for(let i=0;i<3;i++){
+          if(tagMov[i] == ""+buffer){
+            memClient[String(socket.remotePort)].changeState(4)
+            socket.write("correct movname")
+            checkMov = 1
+          }
+        }
+        if(!checkMov){
+          socket.write("incorrect movname")
+        }
+      break;
+      case 4: //wait for seat
+      break;
     }
   });
 
