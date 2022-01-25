@@ -32,7 +32,32 @@ socket.write()
 ![image](https://user-images.githubusercontent.com/78994035/150930568-f751d161-d79c-4872-bbe5-e40a7af4c076.png)
 ### มี client เข้ามาเชื่อมต่อ
 ในส่วนของ server ก็จะบอกว่ามีการเชื่อมต่อเข้ามาของ client โดยที่สามารถเชื่อมต่อได้ครั้งล่ะหลาย client มากสุด 5 client<br/><br/>
-![image](https://user-images.githubusercontent.com/78994035/150930810-2788f296-258b-41d7-af05-812680b3f7d3.png)
+![image](https://user-images.githubusercontent.com/78994035/150930810-2788f296-258b-41d7-af05-812680b3f7d3.png)<br/><br/>
+โดยทำการสร้าง class member ขึ้นมาเพื่อแยกการทำงานในแต่ล่ะ client ที่เข้ามา
+```js
+class member{
+  constructor(memPort){
+    this.memPort = memPort
+    this.state = 0;
+    this.user = ""
+    this.pass = ""
+    this.movN = ""
+  }
+
+  changeState(state){
+    this.state = state
+  }
+
+  get getMemState(){
+    return this.state
+  }
+
+  get getMemPort(){
+    return this.memPort
+  }
+
+}
+```
 ### การ login
 ในส่วนของการ login ก็จะตรวจสอบว่ารหัสผ่านถูกต้องไหมแล้วจึงใส่ password แล้วตรวจสอบว่าการ login ถูกต้องหรือไม่ตามการทำงานดังนี้<br/><br/>
 * ใส่ username<br/><br/>
@@ -42,6 +67,16 @@ socket.write()
 ![image](https://user-images.githubusercontent.com/78994035/150932271-9b0e1707-3ae1-4351-adc1-cbe1728f21c2.png)<br/><br/>
 ในส่วนก็ password ก็เช่นกันจะทำการตรวจสอบว่าถูกต้องหรือไม่ (client ตัวที่ 2 ใส่ผิดในตอนแรก) และจึงสามารถเลือกหนังได้<br/>
 ### การเลือกที่นั่ง
+หนังแต่ล่ะเรื่องจะจัดการผ่าน
+```js
+let tagMov = ["m1","m2","m3"]
+let movName = ['spider man','super man','iron man']
+let movies = new Object()
+for(let i=0;i<3 ;i++){
+  movies[tagMov[i]] = new movie(movName[i]);
+}
+```
+โดยใน class movie นั้นๆก็จะมี class seat เพื่อจัดการที่นั่งในแต่ล่ะเรื่อง
 * กรณีที่ใส่ชื่อหนังผืดก็จะไม่มีที่นั่งเลย
 ![image](https://user-images.githubusercontent.com/78994035/150932704-89cad366-6855-4911-a14d-0a3b938ac0c4.png)
 * ตัวอย่างการจองที่นั่งต่าง
